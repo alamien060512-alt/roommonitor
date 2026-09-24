@@ -4,13 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
@@ -26,10 +30,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ipInput: EditText
     private lateinit var connectBtn: Button
     private lateinit var status: TextView
+    private lateinit var statusDot: View
     private lateinit var roomTemp: TextView
     private lateinit var humidity: TextView
     private lateinit var userTemp: TextView
     private lateinit var updated: TextView
+    private lateinit var issue: TextView
 
     private val pollRunnable = object : Runnable {
         override fun run() {
@@ -39,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 ui.post {
                     if (!polling) return@post
                     result.onSuccess { render(it) }
-                        .onFailure { status.text = "Connection failed: ${it.message}" }
+                        .onFailure { setStatus("No signal", R.color.bad) }
                 }
             }
             ui.postDelayed(this, pollMs)
@@ -53,10 +59,12 @@ class MainActivity : AppCompatActivity() {
         ipInput = findViewById(R.id.ipInput)
         connectBtn = findViewById(R.id.connectBtn)
         status = findViewById(R.id.status)
+        statusDot = findViewById(R.id.statusDot)
         roomTemp = findViewById(R.id.roomTemp)
         humidity = findViewById(R.id.humidity)
         userTemp = findViewById(R.id.userTemp)
         updated = findViewById(R.id.updated)
+        issue = findViewById(R.id.issue)
 
         val prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         ipInput.setText(prefs.getString("ip", ""))
@@ -64,15 +72,21 @@ class MainActivity : AppCompatActivity() {
         connectBtn.setOnClickListener {
             val ip = ipInput.text.toString().trim()
             if (ip.isEmpty()) {
-                status.text = "Enter the Pi's IP address"
+                setStatus("Enter an IP", R.color.bad)
                 return@setOnClickListener
             }
             prefs.edit().putString("ip", ip).apply()
             stopPolling()
             baseUrl = "http://$ip:$port/data"
-            status.text = "Connecting to $ip..."
+            setStatus("Connecting", R.color.muted)
             startPolling()
         }
+    }
+
+    private fun setStatus(text: String, colorRes: Int) {
+        status.text = text
+        val c = ContextCompat.getColor(this, colorRes)
+        ViewCompat.setBackgroundTintList(statusDot, android.content.res.ColorStateList.valueOf(c))
     }
 
     private fun startPolling() {
@@ -106,20 +120,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun fmt(o: JSONObject, key: String, unit: String): String =
-        if (o.isNull(key)) "--" else "${o.getDouble(key)}$unit"
+    private fun num(o: JSONObject, key: String): String =
+        if (o.isNull(key)) "--" else String.format(Locale.US, "%.1f", o.getDouble(key))
 
     private fun render(o: JSONObject) {
-        roomTemp.text = fmt(o, "room_temp", " °C")
-        humidity.text = fmt(o, "humidity", " %")
-        userTemp.text = fmt(o, "user_temp", " °C")
-        updated.text = "Last update: ${o.optString("timestamp", "--")}"
+        roomTemp.text = num(o, "room_temp")
+        humidity.text = num(o, "humidity")
+        userTemp.text = num(o, "user_temp")
+        updated.text = o.optString("timestamp", "")
 
         val errs = o.optJSONObject("errors")
-        status.text = if (errs != null && errs.length() > 0) {
-            "Connected, sensor issue: " + errs.keys().asSequence().joinToString { "$it (${errs.getString(it)})" }
+        if (errs != null && errs.length() > 0) {
+            setStatus("Live", R.color.ok)
+            issue.text = errs.keys().asSequence().joinToString("\n") { "${it.uppercase()}: ${errs.getString(it)}" }
+            issue.visibility = View.VISIBLE
         } else {
-            "Connected"
+            setStatus("Live", R.color.ok)
+            issue.visibility = View.GONE
         }
     }
 }
