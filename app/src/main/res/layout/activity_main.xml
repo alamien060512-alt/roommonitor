@@ -1,97 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:paddingStart="28dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="28dp"
+    android:paddingBottom="12dp">
+
+    <!-- header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Room" />
+
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/dot" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Offline"
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <!-- readings -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Air" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:baselineAligned="false"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/roomTemp"
+                    style="@style/Reading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--" />
+
+                <TextView
+                    style="@style/Unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="°C" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Humidity" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/humidity"
+                    style="@style/Reading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--" />
+
+                <TextView
+                    style="@style/Unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="%" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Body" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/userTemp"
+                    style="@style/Reading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--" />
+
+                <TextView
+                    style="@style/Unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="°C" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/issue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/bad"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <!-- connection footer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/ipInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Pi LAN IP (e.g. 192.168.1.50)"
-                android:importantForAutofill="no"
-                android:inputType="textUri"
-                android:maxLines="1" />
-
-            <Button
-                android:id="@+id/connectBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Connect" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Not connected"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Room temperature (DHT22)"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/roomTemp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:textSize="56sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Humidity (DHT22)"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/humidity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:textSize="56sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="User temperature (MLX90614)"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/userTemp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="--"
-            android:textSize="56sp"
-            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/ipInput"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="192.168.1.50"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/updated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="14dp"
+            android:textColor="@color/muted"
             android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/connectBtn"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:text="Connect"
+            android:textAllCaps="false"
+            android:textColor="@color/ink"
+            android:textSize="15sp" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
