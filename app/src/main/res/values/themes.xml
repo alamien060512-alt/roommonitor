@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.RoomMonitor" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.RoomMonitor" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="android:statusBarColor">@color/bg</item>
+        <item name="android:navigationBarColor">@color/bg</item>
+        <item name="android:windowLightStatusBar">@bool/light_bars</item>
+        <item name="colorPrimary">@color/accent</item>
+    </style>
+
+    <style name="Label">
+        <item name="android:textSize">11sp</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Reading">
+        <item name="android:textSize">76sp</item>
+        <item name="android:textColor">@color/ink</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Unit">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/muted</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
 </resources>
